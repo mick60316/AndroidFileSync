@@ -19,7 +19,6 @@ public class TCPServer implements Runnable{
     private int port = 1234;
     private boolean isListen = true;
     private TcpServerCallback tcpServerCallback;
-    
     public ArrayList<ServerSocketThread> SST = new ArrayList<ServerSocketThread>();
     public TCPServer(int port,TcpServerCallback tcpServerCallback){
         this.port = port;
@@ -124,16 +123,8 @@ public class TCPServer implements Runnable{
             }
         }
     }
-
-
     public interface TcpServerCallback {
         void getFileBuffer (byte []  buffer ,int length);
 
     }
-
-
-
-
-
-
 }

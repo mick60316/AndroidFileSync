@@ -7,8 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    TCPServer tcpServer=null;
-    //ExecutorService exec = Executors.newCachedThreadPool();
+
     Button bt;
     FileSyncSystemTarget fileSyncSystemTarget;
     @Override
@@ -16,13 +15,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bt=findViewById(R.id.sync_button);
-//        tcpServer=new TCPServer(5555, new TCPServer.TcpServerCallback() {
-//            @Override
-//            public void getMsg(String msg) {
-//
-//            }
-//        });
-//        exec.execute(tcpServer);
         fileSyncSystemTarget=new FileSyncSystemTarget();
         bt.setOnClickListener(new View.OnClickListener()
         {
@@ -31,5 +23,24 @@ public class MainActivity extends AppCompatActivity {
                 fileSyncSystemTarget.startSyncTimer(10000);
             }
         });
+    }
+
+    @Override
+    protected void onStop() {
+        System.out.println("OnStop");
+        fileSyncSystemTarget.closeSocket();
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //fileSyncSystemTarget.closeSocket();
+        super.onDestroy();
+
     }
 }

@@ -23,12 +23,7 @@ public class FileSyncSystemTarget implements MikeUdpSocket.UdpServerCallBack, TC
 
     private MikeUdpSocket mikeUdpSocket;
     private TCPServer tcpServer;
-    private Timer timer;
-
-
-
-
-
+    private Timer syncTimer;
     ExecutorService exec = Executors.newCachedThreadPool();
     public FileSyncSystemTarget()
     {
@@ -38,7 +33,7 @@ public class FileSyncSystemTarget implements MikeUdpSocket.UdpServerCallBack, TC
         exec.execute(tcpServer);
 
     }
-    public void syncFolder()
+    public void syncFile()
     {
         mikeUdpSocket.sendFileListToRemote(getFileList());
     }
@@ -64,7 +59,6 @@ public class FileSyncSystemTarget implements MikeUdpSocket.UdpServerCallBack, TC
             fileName =msgSplit[1];
             fileSize =Integer.valueOf(msgSplit[2]);
             fileBuffer =new byte[fileSize];
-
         }
     }
 
@@ -96,17 +90,24 @@ public class FileSyncSystemTarget implements MikeUdpSocket.UdpServerCallBack, TC
 
     public void startSyncTimer (long repeatRate)
     {
-        timer=new Timer();
-        timer.schedule(timerTask,0, repeatRate);
+        syncTimer =new Timer();
+        syncTimer.schedule(syncTimerTask,0, repeatRate);
     }
 
 
-    TimerTask timerTask =new TimerTask() {
+    TimerTask syncTimerTask =new TimerTask() {
         @Override
         public void run() {
-            syncFolder();
+            syncFile();
         }
     };
+
+    public void closeSocket ()
+    {
+        tcpServer.setIsListen(false);
+
+    }
+
 
 
 

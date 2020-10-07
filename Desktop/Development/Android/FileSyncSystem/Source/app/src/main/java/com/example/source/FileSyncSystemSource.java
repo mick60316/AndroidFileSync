@@ -1,21 +1,16 @@
 package com.example.source;
-
-import android.icu.lang.UScript;
-
 import com.example.source.Tcp.TcpClient;
 import com.example.source.Udp.UdpSocket;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback {
+public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback , TcpClient.TcpClientCallBack {
 
     private static final int UDP_LISTEN_PORT =5556;
     private static final int TARGET_LISTEN_PORT =5554;
@@ -25,14 +20,16 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback {
 
 
     private ExecutorService exec = Executors.newCachedThreadPool();
+    private Timer timer;
 
     private static final String FOLDER_PATH = "/storage/emulated/0/Workout";
 
-    public FileSyncSystemSource (){
+    public FileSyncSystemSource ()
+    {
         udpSocket =new UdpSocket(UDP_LISTEN_PORT,TARGET_IP_ADDRESS,TARGET_LISTEN_PORT,this);
-        tcpClient=new TcpClient(TARGET_IP_ADDRESS,5555);
-        exec.execute(udpSocket);
+        tcpClient=new TcpClient(TARGET_IP_ADDRESS,5555,this);
         exec.execute(tcpClient);
+        exec.execute(udpSocket);
 
     }
 
@@ -61,8 +58,6 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback {
                     byte [] fileAllByte =fullyReadFileToBytes(new File("/storage/emulated/0/Workout/"+diffFile.get(0)));
                     udpSocket.sendMsg("file,"+diffFile.get(0)+","+fileAllByte.length);
                     tcpClient.sendFile(fileAllByte);
-
-
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -81,7 +76,6 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback {
             boolean isRepeat =false;
             for (int j=0;j<targetFileList.size() ;j++)
             {
-
                 if (fileNames[i].equals(targetFileList.get(j)))
                 {
                     isRepeat =true;
@@ -89,27 +83,12 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback {
                 }
             }
             if (!isRepeat) {
-
                 diffFileList.add(fileNames[i]);
             }
         }
-
-
-
         return diffFileList;
     }
 
-    private String getFileList ()
-    {
-        String s ="";
-        File file =new File(FOLDER_PATH);
-        String []filesName = file.list();
-        for (int i =0;i<filesName.length ;i++)
-        {
-            s+=filesName [i] +",";
-        }
-        return  s;
-    }
     byte[] fullyReadFileToBytes(File f) throws IOException {
         int size = (int) f.length();
         byte bytes[] = new byte[size];
@@ -135,5 +114,20 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback {
         return bytes;
     }
 
+    @Override
+    public void socketIsCloseEvent() {
 
+
+
+        tcpClient=new TcpClient(TARGET_IP_ADDRESS,5555,this);
+        exec.execute(tcpClient);
+    }
+
+
+
+
+    @Override
+    public void getMsg(String message) {
+
+    }
 }
