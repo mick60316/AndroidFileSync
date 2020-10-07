@@ -86,17 +86,11 @@ public class FileSyncSystemTarget implements MikeUdpSocket.UdpServerCallBack, TC
     public void savaFileToSD(String filename, byte[] filecontent) throws Exception {
 
         System.out.println("Save file "+ filename +" file size "+ filecontent.length);
-
-        //如果手機已插入sd卡,且app具有讀寫sd卡的許可權
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
             filename = Environment.getExternalStorageDirectory().getCanonicalPath() + "/" + filename;
-
-            //這裡就不要用openFileOutput了,那個是往手機記憶體中寫資料的
             FileOutputStream output = new FileOutputStream(filename);
             output.write(filecontent);
-            //將String字串以位元組流的形式寫入到輸出流中
             output.close();
-            //關閉輸出流
         }
     }
 

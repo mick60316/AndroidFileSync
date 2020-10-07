@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        bt=findViewById(R.id.test);
+        bt=findViewById(R.id.sync_button);
 //        tcpServer=new TCPServer(5555, new TCPServer.TcpServerCallback() {
 //            @Override
 //            public void getMsg(String msg) {
