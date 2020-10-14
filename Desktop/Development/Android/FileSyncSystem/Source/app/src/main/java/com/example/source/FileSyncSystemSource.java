@@ -1,4 +1,5 @@
 package com.example.source;
+
 import com.example.source.Tcp.TcpClient;
 import com.example.source.Udp.UdpSocket;
 import java.io.File;
@@ -14,14 +15,11 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback , TcpC
 
     private static final int UDP_LISTEN_PORT =5556;
     private static final int TARGET_LISTEN_PORT =5554;
-    private static final String TARGET_IP_ADDRESS ="192.168.171.122";
+    private static final String TARGET_IP_ADDRESS ="192.168.175.206";
     private UdpSocket udpSocket;
     private TcpClient tcpClient;
-
-
     private ExecutorService exec = Executors.newCachedThreadPool();
     private Timer timer;
-
     private static final String FOLDER_PATH = "/storage/emulated/0/Workout";
 
     public FileSyncSystemSource ()
@@ -30,7 +28,6 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback , TcpC
         tcpClient=new TcpClient(TARGET_IP_ADDRESS,5555,this);
         exec.execute(tcpClient);
         exec.execute(udpSocket);
-
     }
 
     @Override
@@ -116,8 +113,6 @@ public class FileSyncSystemSource  implements UdpSocket.UdpSocketCallback , TcpC
 
     @Override
     public void socketIsCloseEvent() {
-
-
 
         tcpClient=new TcpClient(TARGET_IP_ADDRESS,5555,this);
         exec.execute(tcpClient);

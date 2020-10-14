@@ -3,8 +3,17 @@ package com.example.target;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.arthenica.mobileffmpeg.Config;
+import com.arthenica.mobileffmpeg.FFmpeg;
+
+import java.io.File;
+
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_CANCEL;
+import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,12 +24,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bt=findViewById(R.id.sync_button);
+
         fileSyncSystemTarget=new FileSyncSystemTarget();
+
         bt.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {
-                fileSyncSystemTarget.startSyncTimer(10000);
+
+
+
             }
         });
     }
@@ -28,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         System.out.println("OnStop");
-        fileSyncSystemTarget.closeSocket();
         super.onStop();
     }
 

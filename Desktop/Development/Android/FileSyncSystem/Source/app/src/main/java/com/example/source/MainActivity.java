@@ -25,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        File f =new File("/storage/emulated/0/Workout");
+        String []  index =f.list();
+        for (int i =0;i<index.length ;i++)
+        {
+            System.out.println(index[i]);
+
+        }
         fileSyncSystemSource =new FileSyncSystemSource();
     }
 
